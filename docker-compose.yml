@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  keygenerator:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    command: ["python", "-m", "cli"]
+    environment:
+      - CHANNEL_NAME
+      - KMS_URL
+      - EXPIRE_TIME
+      - KMS_TOKEN
+      - KEY_URI
+      - OUTPUT_DIR
+      - QUEUE_PATH
+      - SCHEDULE_GENERATE=${SCHEDULE_GENERATE:-*/59 * * * *}
+      - SCHEDULE_QUEUE=${SCHEDULE_QUEUE:-*/5 * * * *}
+    volumes:
+      - ./:/app
+      - ${OUTPUT_DIR}:/srv/keys
+      - ${QUEUE_PATH}:/srv/queues
